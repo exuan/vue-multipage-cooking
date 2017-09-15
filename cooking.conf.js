@@ -12,8 +12,23 @@ cooking.set({
     devServer: {
         port: 3200,
         publicPath: '/',
-        proxy: {
-            // see https://webpack.github.io/docs/webpack-dev-server.html#proxy
+          proxy: {
+            '/' : {
+                target: 'http://www.demo.demo',
+                changeOrigin: true,
+                cookieDomainRewrite: {
+                    '*': '.demo.demo'
+                },
+                headers: {
+                    domain: '.demo.demo',
+                    Cookie: 'PHPSESSID=123456789'
+                },
+                bypass: function (req) {
+                    // POST or XMLHttpRequest request 
+                    return req.method !== 'POST' && req.headers['x-requested-with'] !== 'XMLHttpRequest';
+                }
+            }
+
         }
     },
     hash: true,
